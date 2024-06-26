@@ -8,6 +8,7 @@ Benchmarking various Ruby background job engines.
 brew install postgresql@16 redis
 bundle
 rake db:create
+bin/rails g delayed:migration
 bin/rails g good_job:install
 rake solid_queue:install:migrations
 rake db:migrate
@@ -18,19 +19,21 @@ export RUBY_YJIT_ENABLE=1
 
 ```
 redis-cli flushall
-rake db:drop db:create db:migrate
+bin/rails db:drop db:create db:migrate
 ```
 
 ## Run the Benchmarks
 
-`bin/rails r bench.rb`
+```
+bin/rails r bench.rb
+```
 
 ## Results
 
 You'll see something similar to:
 
 ```
-%  bin/rails r bench.rb                                 
+%  bin/rails r bench.rb
 2024-06-26T00:05:53.654Z pid=80843 tid=1jkn INFO: Sidekiq 7.3.0 connecting to Redis with options {:size=>10, :pool_name=>"internal", :url=>nil}
                                 user     system      total        real
 ruby 3.3.3 (2024-06-12 revision f1c7b6f435) [arm64-darwin23]
