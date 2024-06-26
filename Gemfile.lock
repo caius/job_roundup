@@ -82,6 +82,9 @@ GEM
     connection_pool (2.4.1)
     crass (1.0.6)
     date (3.3.4)
+    delayed (0.5.4)
+      activerecord (>= 5.2)
+      concurrent-ruby
     drb (2.2.1)
     erubi (1.13.0)
     et-orbi (1.2.11)
@@ -218,6 +221,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  delayed (~> 0.5)
   good_job (~> 3.0)
   pg (~> 1.5)
   rails (~> 7.1)

@@ -4,6 +4,7 @@ source "https://rubygems.org"
 
 gem "rails", "~> 7.1"
 gem "sidekiq", "~> 7.2"
+gem "delayed", "~> 0.5"
 gem "good_job", "~> 3.0"
 gem "solid_queue", "~> 0.3"
 
