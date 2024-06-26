@@ -7,18 +7,28 @@ Sidekiq.redis { |c| c.flushdb }
 
 # You can run this to clear all data from PG and Redis
 # rake db:drop db:create db:migrate ; redis-cli flushall
-raise "Databases not empty" unless [GoodJob::Job.count, SolidQueue::Job.count, Sidekiq::Queue.new.size].all?(&:zero?)
+raise "Databases not empty" unless [Delayed::Job.count, GoodJob::Job.count, SolidQueue::Job.count, Sidekiq::Queue.new.size].all?(&:zero?)
 
 hash = {"foo" => true}
 Benchmark.bm(25) do |x|
   outer = 10
   inner = 1000
   puts RUBY_DESCRIPTION
-  p({rails: Rails.version, 
+  p({rails: Rails.version,
+     delayed: Gem.loaded_specs["delayed"].version.to_s,
      good_job: GoodJob::VERSION,
      sidekiq: Sidekiq::VERSION,
      solid_queue: SolidQueue::VERSION})
   puts "Benchmarking with #{outer * inner} jobs"
+
+  ActiveJob::Base.queue_adapter = :delayed
+  x.report("delayed-push") do
+    outer.times do
+      inner.times do
+        RoundupJob.perform_later(123, "hello world", hash)
+      end
+    end
+  end
 
   ActiveJob::Base.queue_adapter = :good_job
   x.report("good_job-pushbulk") do
